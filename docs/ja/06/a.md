@@ -63,8 +63,7 @@ type Writer[W, A] = WriterT[Id, W, A]
 以下が [`WriterT`]($scalazBaseUrl$/core/src/main/scala/scalaz/WriterT.scala) を単純化したものだ:
 
 ```scala
-sealed trait WriterT[F[_], W, A] { self =>
-  val run: F[(W, A)]
+final case class WriterT[F[_], W, A](run: F[(W, A)]) { self =>
 
   def written(implicit F: Functor[F]): F[W] =
     F.map(run)(_._1)

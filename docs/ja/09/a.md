@@ -91,24 +91,16 @@ LYAHFGG:
 `Tree` のための Zipper は Scalaz では [`TreeLoc`]($scalazBaseUrl$/core/src/main/scala/scalaz/TreeLoc.scala) と呼ばれている:
 
 ```scala
-sealed trait TreeLoc[A] {
-  import TreeLoc._
-  import Tree._
+ /**
+ * @param tree The currently selected node.
+ * @param lefts The left siblings of the current node.
+ * @param rights The right siblings of the current node.
+ * @param parents The parent contexts of the current node.
+ */
+final case class TreeLoc[A](tree: Tree[A], lefts: TreeForest[A],
+                            rights: TreeForest[A], parents: Parents[A]) {
 
-  /** The currently selected node. */
-  val tree: Tree[A]
-  /** The left siblings of the current node. */
-  val lefts: TreeForest[A]
-  /** The right siblings of the current node. */
-  val rights: TreeForest[A]
-  /** The parent contexts of the current node. */
-  val parents: Parents[A]
   ...
-}
-
-object TreeLoc extends TreeLocFunctions with TreeLocInstances {
-  def apply[A](t: Tree[A], l: TreeForest[A], r: TreeForest[A], p: Parents[A]): TreeLoc[A] =
-    loc(t, l, r, p)
 }
 
 trait TreeLocFunctions {
@@ -128,7 +120,9 @@ res0: scalaz.TreeLoc[Char] = scalaz.TreeLocFunctions\$\$anon\$2@6439ca7b
 `TreeLoc` はフォーカスを移動するのに DOM API のような様々なメソッドを実装する:
 
 ```scala
-sealed trait TreeLoc[A] {
+final case class TreeLoc[A](tree: Tree[A], lefts: TreeForest[A],
+                            rights: TreeForest[A], parents: Parents[A]) {
+
   ...
   /** Select the parent of the current node. */
   def parent: Option[TreeLoc[A]] = ...
