@@ -1,4 +1,3 @@
-
 ### Composing monadic functions
 
 LYAHFGG:
@@ -12,7 +11,7 @@ Looks like I missed this one too.
 In Scalaz there's a special wrapper for function of type `A => M[B]` called [Kleisli]($scalazBaseUrl$/core/src/main/scala/scalaz/Kleisli.scala):
 
 ```scala
-sealed trait Kleisli[M[+_], -A, +B] { self =>
+sealed trait Kleisli[M[_], A, B] { self =>
   def run(a: A): M[B]
   ...
   /** alias for `andThen` */
@@ -58,7 +57,7 @@ res60: Option[Int] = Some(500)
 As a bonus, Scalaz defines `Reader` as a special case of `Kleisli` as follows:
 
 ```scala
-  type ReaderT[F[+_], E, A] = Kleisli[F, E, A]
+  type ReaderT[F[_], E, A] = Kleisli[F, E, A]
   type Reader[E, A] = ReaderT[Id, E, A]
   object Reader {
     def apply[E, A](f: E => A): Reader[E, A] = Kleisli[Id, E, A](f)

@@ -21,7 +21,7 @@ sealed trait ST[S, A] {
 And the following is the typeclass contract of `IO`:
 
 ```scala
-sealed trait IO[+A] {
+sealed trait IO[A] {
   private[effect] def apply(rw: World[RealWorld]): Trampoline[(World[RealWorld], A)]
 }
 ```

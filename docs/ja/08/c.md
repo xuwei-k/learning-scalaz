@@ -15,7 +15,7 @@ LYAHFGG:
 Scalaz には [Kleisli]($scalazBaseUrl$/core/src/main/scala/scalaz/Kleisli.scala) と呼ばれる `A => M[B]` という型の関数に対する特殊なラッパーがある:
 
 ```scala
-sealed trait Kleisli[M[+_], -A, +B] { self =>
+sealed trait Kleisli[M[_], A, B] { self =>
   def run(a: A): M[B]
   ...
   /** alias for `andThen` */
@@ -28,7 +28,7 @@ sealed trait Kleisli[M[+_], -A, +B] { self =>
 }
 
 object Kleisli extends KleisliFunctions with KleisliInstances {
-  def apply[M[+_], A, B](f: A => M[B]): Kleisli[M, A, B] = kleisli(f)
+  def apply[M[_], A, B](f: A => M[B]): Kleisli[M, A, B] = kleisli(f)
 }
 ```
 
@@ -61,7 +61,7 @@ res60: Option[Int] = Some(500)
 ボーナスとして、Scalaz は `Reader` を `Kleisli` の特殊形として以下のように定義する:
 
 ```scala
-  type ReaderT[F[+_], E, A] = Kleisli[F, E, A]
+  type ReaderT[F[_], E, A] = Kleisli[F, E, A]
   type Reader[E, A] = ReaderT[Id, E, A]
   object Reader {
     def apply[E, A](f: E => A): Reader[E, A] = Kleisli[Id, E, A](f)

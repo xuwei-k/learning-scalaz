@@ -53,17 +53,17 @@ LYAHFGG:
 Scalaz でこれに対応するのは [`Writer`]($scalazBaseUrl$/core/src/main/scala/scalaz/package.scala) だ:
 
 ```scala
-type Writer[+W, +A] = WriterT[Id, W, A]
+type Writer[W, A] = WriterT[Id, W, A]
 ```
 
-`Writer[+W, +A]` は、`WriterT[Id, W, A]` の型エイリアスだ。
+`Writer[W, A]` は、`WriterT[Id, W, A]` の型エイリアスだ。
 
 ### WriterT
 
 以下が [`WriterT`]($scalazBaseUrl$/core/src/main/scala/scalaz/WriterT.scala) を単純化したものだ:
 
 ```scala
-sealed trait WriterT[F[+_], +W, +A] { self =>
+sealed trait WriterT[F[_], W, A] { self =>
   val run: F[(W, A)]
 
   def written(implicit F: Functor[F]): F[W] =

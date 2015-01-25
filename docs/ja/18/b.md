@@ -189,7 +189,7 @@ instance (Functor f) => Monad (Free f) where
 これに対応する Scalaz でのデータ構造は `Free` と呼ばれる:
 
 ```scala
-sealed abstract class Free[S[+_], +A](implicit S: Functor[S]) {
+sealed abstract class Free[S[_], A](implicit S: Functor[S]) {
   final def map[B](f: A => B): Free[S, B] =
     flatMap(a => Return(f(a)))
 
@@ -202,18 +202,18 @@ sealed abstract class Free[S[+_], +A](implicit S: Functor[S]) {
 
 object Free extends FreeInstances {
   /** Return from the computation with the given value. */
-  case class Return[S[+_]: Functor, +A](a: A) extends Free[S, A]
+  case class Return[S[_]: Functor, A](a: A) extends Free[S, A]
 
   /** Suspend the computation with the given suspension. */
-  case class Suspend[S[+_]: Functor, +A](a: S[Free[S, A]]) extends Free[S, A]
+  case class Suspend[S[_]: Functor, A](a: S[Free[S, A]]) extends Free[S, A]
 
   /** Call a subroutine and continue with the given function. */
-  case class Gosub[S[+_]: Functor, A, +B](a: Free[S, A],
+  case class Gosub[S[_]: Functor, A, B](a: Free[S, A],
                                           f: A => Free[S, B]) extends Free[S, B]
 }
 
 trait FreeInstances {
-  implicit def freeMonad[S[+_]:Functor]: Monad[({type f[x] = Free[S, x]})#f] =
+  implicit def freeMonad[S[_]:Functor]: Monad[({type f[x] = Free[S, x]})#f] =
     new Monad[({type f[x] = Free[S, x]})#f] {
       def point[A](a: => A) = Return(a)
       override def map[A, B](fa: Free[S, A])(f: A => B) = fa map f

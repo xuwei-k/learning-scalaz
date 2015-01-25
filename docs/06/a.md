@@ -53,17 +53,17 @@ LYAHFGG:
 In Scalaz, the equivalent is called [`Writer`]($scalazBaseUrl$/core/src/main/scala/scalaz/package.scala):
 
 ```scala
-type Writer[+W, +A] = WriterT[Id, W, A]
+type Writer[W, A] = WriterT[Id, W, A]
 ```
 
-`Writer[+W, +A]` is a type alias for `WriterT[Id, W, A]`.
+`Writer[W, A]` is a type alias for `WriterT[Id, W, A]`.
 
 ### WriterT
 
 Here's the simplified version of [`WriterT`]($scalazBaseUrl$/core/src/main/scala/scalaz/WriterT.scala):
 
 ```scala
-sealed trait WriterT[F[+_], +W, +A] { self =>
+sealed trait WriterT[F[_], W, A] { self =>
   val run: F[(W, A)]
 
   def written(implicit F: Functor[F]): F[W] =
